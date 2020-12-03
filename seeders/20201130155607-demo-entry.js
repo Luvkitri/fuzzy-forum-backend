@@ -19,14 +19,16 @@ module.exports = {
                 posted_at: new Date(),
                 edited_at: new Date(),
                 active: true,
-                user_id: 1
+                user_id: 1,
+                sub_thread_id: 1
             },
             {
                 title: "Test entry 2",
                 posted_at: new Date(),
                 edited_at: new Date(),
                 active: true,
-                user_id: 1
+                user_id: 1,
+                sub_thread_id: 1
             },
             {
                 title: "Test entry 3",
@@ -34,7 +36,7 @@ module.exports = {
                 posted_at: new Date(),
                 edited_at: new Date(),
                 active: true,
-                user_id: 1
+                user_id: 1,
             },
             {
                 title: "Test disactivated entry 4",
@@ -42,7 +44,8 @@ module.exports = {
                 posted_at: new Date(),
                 edited_at: new Date(),
                 active: false,
-                user_id: 1
+                user_id: 1,
+                sub_thread_id: 2
             },
             {
                 title: "Test entry 4",
@@ -50,7 +53,8 @@ module.exports = {
                 posted_at: new Date(),
                 edited_at: new Date(),
                 active: true,
-                user_id: 2
+                user_id: 2,
+                sub_thread_id: 2
             }
         ]);
     },

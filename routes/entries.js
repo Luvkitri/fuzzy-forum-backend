@@ -5,13 +5,24 @@ const models = require('../models');
 router.get('/', async (req, res) => {
     try {
         const results = await models.Entry.findAll({
-            include: [{
-                model: models.Tag,
-                as: 'TagsInEntries',
-                through: {
-                    attributes: []
+            include: [
+                {
+                    model: models.Tag,
+                    as: 'TagsInEntries',
+                    through: {
+                        attributes: []
+                    }
+                },
+                {
+                    model: models.Thread,
+                    as: 'Thread',
+                },
+                {
+                    model: models.User,
+                    as: 'User',
+                    attributes: ['first_name', 'last_name']
                 }
-            }]
+            ]
         });
 
         res.status(200).json(results);
@@ -23,7 +34,7 @@ router.get('/', async (req, res) => {
 });
 
 router.put('/:entryId', async (req, res) => {
-    
+
 });
 
 module.exports = router;

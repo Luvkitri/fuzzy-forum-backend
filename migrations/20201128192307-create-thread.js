@@ -18,6 +18,11 @@ module.exports = {
             name: {
                 type: Sequelize.STRING,
                 allowNull: false
+            },
+            is_main: {
+                type: Sequelize.BOOLEAN,
+                allowNull: false,
+                defaultValue: false
             }
         });
     },

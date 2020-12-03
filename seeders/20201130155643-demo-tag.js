@@ -7,13 +7,10 @@ module.exports = {
                 name: "python"
             },
             {
-                name: "algorithms"
+                name: "algorithm"
             },
             {
-                name: "books"
-            },
-            {
-                name: "reviews"
+                name: "review"
             }
         ]);
     },
@@ -26,7 +23,7 @@ module.exports = {
          * await queryInterface.bulkDelete('People', null, {});
          */
 
-        await queryInterface.bulkDelete('entry_tag_relation', null, {
+        await queryInterface.bulkDelete('tag', null, {
             truncate: true,
             cascade: true,
             restartIdentity: true

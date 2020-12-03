@@ -59,10 +59,10 @@ module.exports = {
                     key: 'id'
                 }
             },
-            sub_thread_id: {
+            thread_id: {
                 type: Sequelize.INTEGER,
                 references: {
-                    model: 'sub_thread',
+                    model: 'thread',
                     key: 'id'
                 }
             }

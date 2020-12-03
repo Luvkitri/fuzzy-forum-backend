@@ -33,16 +33,8 @@ module.exports = {
                 tag_id: 3
             },
             {
-                entry_id: 4,
-                tag_id: 4
-            },
-            {
                 entry_id: 5,
                 tag_id: 3
-            },
-            {
-                entry_id: 5,
-                tag_id: 4
             }
         ]);
     },

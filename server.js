@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Routes
 app.use('/entries', require('./routes/entries'));
-app.use('/entries', require('./routes/tags'));
+app.use('/threads', require('./routes/threads'));
 
 const port = process.env.PORT;
 let server = app.listen(port, () => {

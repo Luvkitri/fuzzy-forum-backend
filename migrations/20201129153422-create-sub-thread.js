@@ -8,7 +8,7 @@ module.exports = {
          * Example:
          * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
          */
-        await queryInterface.createTable('thread', {
+        await queryInterface.createTable('sub_thread', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
@@ -17,6 +17,10 @@ module.exports = {
             },
             name: {
                 type: Sequelize.STRING,
+                allowNull: false
+            },
+            thread_id: {
+                type: Sequelize.INTEGER,
                 allowNull: false
             }
         });
@@ -29,6 +33,6 @@ module.exports = {
          * Example:
          * await queryInterface.dropTable('users');
          */
-        await queryInterface.dropTable('thread');
+        await queryInterface.dropTable('sub_thread');
     }
 };

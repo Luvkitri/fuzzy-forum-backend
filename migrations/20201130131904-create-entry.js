@@ -61,6 +61,7 @@ module.exports = {
             },
             thread_id: {
                 type: Sequelize.INTEGER,
+                allowNull: false,
                 references: {
                     model: 'thread',
                     key: 'id'

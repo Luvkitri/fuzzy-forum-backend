@@ -11,30 +11,26 @@ module.exports = {
          *   isBetaMember: false
          * }], {});
         */
-        await queryInterface.bulkInsert('entry_tag_relation', [
+        await queryInterface.bulkInsert('entry_sub_thread_relation', [
             {
                 entry_id: 1,
-                tag_id: 1
+                sub_thread_id: 1
             },
             {
                 entry_id: 1,
-                tag_id: 2
+                sub_thread_id: 2
             },
             {
                 entry_id: 2,
-                tag_id: 1
+                sub_thread_id: 1
             },
             {
                 entry_id: 3,
-                tag_id: 3
-            },
-            {
-                entry_id: 4,
-                tag_id: 2
+                sub_thread_id: 3
             },
             {
                 entry_id: 5,
-                tag_id: 3
+                sub_thread_id: 3
             }
         ]);
     },
@@ -47,7 +43,7 @@ module.exports = {
          * await queryInterface.bulkDelete('People', null, {});
          */
 
-        await queryInterface.bulkDelete('entry_tag_relation', null, {
+        await queryInterface.bulkDelete('entry_sub_thread_relation', null, {
             truncate: true,
             cascade: true
         });

@@ -14,47 +14,48 @@ module.exports = {
 
         await queryInterface.bulkInsert('entry', [
             {
-                title: "Test entry 1",
+                title: "Programing type entry",
                 content: "Entry with content",
                 posted_at: new Date(),
                 edited_at: new Date(),
                 active: true,
                 user_id: 1,
-                sub_thread_id: 1
+                thread_id: 1,
             },
             {
-                title: "Test entry 2",
+                title: "Programing type entry",
                 posted_at: new Date(),
                 edited_at: new Date(),
                 active: true,
                 user_id: 1,
-                sub_thread_id: 1
+                thread_id: 1,
             },
             {
-                title: "Test entry 3",
+                title: "Book type entry",
                 content: "Entry with content",
                 posted_at: new Date(),
                 edited_at: new Date(),
                 active: true,
                 user_id: 1,
+                thread_id: 4,
             },
             {
-                title: "Test disactivated entry 4",
+                title: "Programing disactivated entry",
                 content: "Bad content",
                 posted_at: new Date(),
                 edited_at: new Date(),
                 active: false,
                 user_id: 1,
-                sub_thread_id: 2
+                thread_id: 1,
             },
             {
-                title: "Test entry 4",
+                title: "Book type entry",
                 content: "Entry with content",
                 posted_at: new Date(),
                 edited_at: new Date(),
                 active: true,
                 user_id: 2,
-                sub_thread_id: 2
+                thread_id: 4,
             }
         ]);
     },

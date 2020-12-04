@@ -1,0 +1,36 @@
+{
+  "name": "fuzzy-forum-backend",
+  "version": "1.0.0",
+  "description": "The forum application with automatic fuzzy generator of new topics",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Luvkitri/fuzzy-forum-backend.git"
+  },
+  "author": "Jan Jędrzejewski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Luvkitri/fuzzy-forum-backend/issues"
+  },
+  "homepage": "https://github.com/Luvkitri/fuzzy-forum-backend#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "morgan": "^1.10.0",
+    "passport": "^0.4.1",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.4.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.3.5",
+    "sequelize-cli": "^6.2.0"
+  },
+  "devDependencies": {}
+}

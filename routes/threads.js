@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
             include: [{
                 model: models.SubThread,
                 as: 'SubThreads',
-                attributes: ['id', 'name', 'created_at']
+                attributes: ['id', 'name']
             }]
         });
 

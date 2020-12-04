@@ -18,6 +18,13 @@ router.get('/', async (req, res) => {
                     as: 'Thread',
                 },
                 {
+                    model: models.SubThread,
+                    as: 'SubThreadsInEntry',
+                    through: {
+                        attributes: []
+                    }
+                },
+                {
                     model: models.User,
                     as: 'User',
                     attributes: ['first_name', 'last_name']

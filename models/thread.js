@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'thread_id',
                 onDelete: 'CASCADE'
             });
+            
+            Thread.hasMany(models.Entry, {
+                foreignKey: 'thread_id',
+                onDelete: 'CASCADE'
+            });
         }
     };
 

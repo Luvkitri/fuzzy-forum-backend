@@ -10,9 +10,12 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             SubThread.belongsTo(models.Thread);
-            SubThread.hasMany(models.Entry, {
+
+            SubThread.belongsToMany(models.Entry, { 
+                as: 'EntriesInSubThread',
+                through: models.EntrySubThreadRelation,
                 foreignKey: 'sub_thread_id',
-                onDelete: 'CASCADE'
+                otherKey: 'entry_id'
             });
         }
     };
@@ -35,8 +38,7 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'SubThread',
         tableName: 'sub_thread',
-        createdAt: 'created_at',
-        updatedAt: false,
+        timestamps: false,
         underscored: true
     });
 

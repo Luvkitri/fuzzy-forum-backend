@@ -10,12 +10,20 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             Entry.belongsTo(models.User);
+            Entry.belongsTo(models.Thread);
 
             Entry.belongsToMany(models.Tag, { 
                 as: 'TagsInEntries',
                 through: models.EntryTagRelation,
                 foreignKey: 'entry_id',
                 otherKey: 'tag_id'
+            });
+
+            Entry.belongsToMany(models.SubThread, { 
+                as: 'SubThreadsInEntry',
+                through: models.EntrySubThreadRelation,
+                foreignKey: 'entry_id',
+                otherKey: 'sub_thread_id'
             });
         }
     };
@@ -58,14 +66,15 @@ module.exports = (sequelize, DataTypes) => {
                 as: 'user_id'
             }
         },
-        sub_thread_id: {
+        thread_id: {
             type: DataTypes.INTEGER,
+            allowNull: false,
             references: {
-                model: 'SubThread',
+                model: 'Thread',
                 key: 'id',
-                as: 'sub_thread_id'
+                as: 'thread_id'
             }
-        }
+        },
     }, {
         sequelize,
         modelName: 'Entry',

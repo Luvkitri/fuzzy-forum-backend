@@ -1,53 +1,54 @@
 const LocalStrategy = require('passport-local').Strategy;
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
 const models = require('../models');
 const bycrypt = require('bcryptjs');
+const { getPublicKey } = require('../lib/utils');
 
 const User = models.User;
 
-module.exports = function (passport) {
-    // Local Strategy
+const PUB_KEY = getPublicKey();
+
+const options = {
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: PUB_KEY,
+    algorithms: ['RS256']
+}
+
+module.exports = (passport) => {
+    // JWT Strategy
     passport.use(
-        new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+        new JwtStrategy(options, async (payload, done) => {
             try {
                 const user = await User.findOne({
                     where: {
-                        email: email
+                        id: payload.sub
                     }
                 });
 
                 if (!user) {
-                    return done(null, false, { message: 'There is no user with that email' });
+                    return done(null, false);
                 }
 
-                bycrypt.compare(password, user.password, (error, isMatch) => {
-                    if (error) {
-                        throw error;
-                    }
-
-                    if (isMatch) {
-                        return done(null, user);
-                    }
-
-                    return done(null, false, { message: 'Wrong password' });
-                });
+                return done(null, user);
             } catch (error) {
-                console.error(error.message);
+                done(error, null);
             }
         })
-    );
+    )
 
-    passport.serializeUser((user, done) => {
-        done(null, user.id);
-    });
+    // passport.serializeUser((user, done) => {
+    //     done(null, user.id);
+    // });
 
-    passport.deserializeUser((id, done) => {
-        try {
-            const user = await User.findByPK(id);
-            done(null, user);
-        } catch(error) {
-            done(error, false, { message: 'User does not exist'});
-        }
-    });
+    // passport.deserializeUser(async (id, done) => {
+    //     try {
+    //         const user = await User.findByPK(id);
+    //         done(null, user);
+    //     } catch (error) {
+    //         done(error, false, { message: 'User does not exist' });
+    //     }
+    // });
 
     // Google OAuth2.0 Strategy
 }

@@ -15,6 +15,7 @@ const { issueJWT } = require('../lib/utils');
 
 router.post('/signup', userValidationRules(), validate, async (req, res) => {
     try {
+        console.log(req.body);
         let {
             firstName,
             lastName,
@@ -26,11 +27,14 @@ router.post('/signup', userValidationRules(), validate, async (req, res) => {
         let user = await models.User.findOne({ where: { email: email } });
 
         if (user) {
+            console.log('here?')
             return res.status(400).json({
-                auth: false,
+                success: false,
                 error: "User Already Exists"
             });
         }
+
+        console.log(req.body);
 
         if (login === "") {
             login = `${firstName} ${lastName}`
@@ -48,13 +52,9 @@ router.post('/signup', userValidationRules(), validate, async (req, res) => {
 
         await newUser.save();
 
-        const jwt = await issueJWT(newUser);
-
         res.status(201).json({
-            auth: true,
-            user: newUser,
-            token: jwt.token,
-            expiresIn: jwt.expires
+            success: true,
+            user: newUser
         });
     } catch (error) {
         res.status(500).send({

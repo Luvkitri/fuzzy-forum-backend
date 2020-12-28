@@ -4,18 +4,25 @@ const models = require('../models');
 const { userValidationRules, validate } = require('../config/validator');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-const { ExtractJwt } = require('passport-jwt');
 const { issueJWT } = require('../lib/utils');
+
+router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+    try {
+        res.status(200).json(req.user);
+    } catch (error) {
+        res.status(500).send({
+            error: error.message
+        });
+    }
+});
 
 /**
  * @method - POST
  * @param - /signup
  * @description - User SignUp
  */
-
 router.post('/signup', userValidationRules(), validate, async (req, res) => {
     try {
-        console.log(req.body);
         let {
             firstName,
             lastName,
@@ -27,7 +34,6 @@ router.post('/signup', userValidationRules(), validate, async (req, res) => {
         let user = await models.User.findOne({ where: { email: email } });
 
         if (user) {
-            console.log('here?')
             return res.status(400).json({
                 success: false,
                 error: "User Already Exists"
@@ -63,7 +69,11 @@ router.post('/signup', userValidationRules(), validate, async (req, res) => {
     }
 });
 
-
+/**
+ * @method - POST
+ * @param - /login
+ * @description - User Login
+ */
 router.post('/login', async (req, res) => {
     try {
         let {
@@ -96,9 +106,19 @@ router.post('/login', async (req, res) => {
 
         const jwt = await issueJWT(user);
 
+        const userData = {
+            id: user.id,
+            firstName: user.first_name,
+            lastName: user.last_name,
+            login: user.login,
+            email: user.email,
+            updatedAt: user.updated_at,
+            createdAt: user.created_at
+        }
+
         res.status(201).json({
             auth: true,
-            user: user,
+            user: userData,
             token: jwt.token,
             expiresIn: jwt.expires
         });
@@ -109,9 +129,10 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.get('/auth', passport.authenticate('jwt', { session: false}), (req, res) => {
+router.get('/auth', passport.authenticate('jwt', { session: false }), (req, res) => {
     res.status(200).json({
         auth: true,
+        user: req.user,
         msg: 'User authorized'
     });
 });

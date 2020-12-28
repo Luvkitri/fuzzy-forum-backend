@@ -4,13 +4,13 @@ module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.bulkInsert('tag', [
             {
-                name: "python"
+                name: "Python"
             },
             {
-                name: "algorithm"
+                name: "Algorithm"
             },
             {
-                name: "review"
+                name: "Review"
             }
         ]);
     },

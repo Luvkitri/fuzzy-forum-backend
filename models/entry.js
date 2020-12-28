@@ -12,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
             Entry.belongsTo(models.User);
             Entry.belongsTo(models.Thread);
 
+            Entry.hasMany(models.Answer, {
+                foreignKey: 'entry_id',
+                onDelete: 'CASCADE'
+            });
+
             Entry.belongsToMany(models.Tag, { 
                 as: 'TagsInEntries',
                 through: models.EntryTagRelation,

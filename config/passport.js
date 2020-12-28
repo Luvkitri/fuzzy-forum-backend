@@ -23,14 +23,23 @@ module.exports = (passport) => {
                 const user = await User.findOne({
                     where: {
                         id: payload.sub
-                    }
+                    },
+                    attributes: [
+                        'id',
+                        'first_name',
+                        'last_name',
+                        'email',
+                        'login',
+                        'updated_at',
+                        'created_at'
+                    ]
                 });
 
                 if (!user) {
                     return done(null, false);
                 }
 
-                return done(null, user);
+                return done(null, user.dataValues);
             } catch (error) {
                 done(error, null);
             }

@@ -17,11 +17,11 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             title: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT,
                 allowNull: false
             },
             content: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT,
             },
             score: {
                 type: Sequelize.INTEGER,

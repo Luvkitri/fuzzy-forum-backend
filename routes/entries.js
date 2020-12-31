@@ -78,6 +78,16 @@ router.get('/:entryId', async (req, res) => {
                     model: models.User,
                     as: 'User',
                     attributes: ['first_name', 'last_name']
+                },
+                {
+                    model: models.Answer,
+                    as: 'Answers',
+                    attributes: ['id', 'content', 'score', 'posted_at', 'edited_at', 'user_id', 'entry_id'],
+                    include: [{
+                        model: models.User,
+                        as: 'User',
+                        attributes: ['first_name', 'last_name'],
+                    }]
                 }
             ],
         });

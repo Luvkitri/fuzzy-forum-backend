@@ -35,11 +35,11 @@ module.exports = (sequelize, DataTypes) => {
 
     Entry.init({
         title: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false
         },
         content: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false
         },
         score: {

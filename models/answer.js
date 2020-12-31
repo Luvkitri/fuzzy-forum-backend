@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Answer.init({
         content: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false
         },
         score: {

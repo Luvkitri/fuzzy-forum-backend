@@ -4,9 +4,14 @@ const models = require('../models');
 const passport = require('passport');
 const entry = require('../models/entry');
 const { firstLetter } = require('../lib/utils');
+const { tagsFrequency } = require('../lib/fuzzy');
 
 router.get('/', async (req, res) => {
     try {
+
+        // ! Testing
+        await tagsFrequency();
+
         const results = await models.Entry.findAll({
             include: [
                 {

@@ -28,15 +28,20 @@ module.exports = {
                 allowNull: false,
                 defaultValue: 0
             },
-            views: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                defaultValue: 0
-            },
             answers: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 defaultValue: 0
+            },
+            users_that_incremented: {
+                type: Sequelize.ARRAY(Sequelize.INTEGER),
+                allowNull: true,
+                defaultValue: []
+            },
+            users_that_decremented: {
+                type: Sequelize.ARRAY(Sequelize.INTEGER),
+                allowNull: true,
+                defaultValue: []
             },
             posted_at: {
                 type: Sequelize.DATE,

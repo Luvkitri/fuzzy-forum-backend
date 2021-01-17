@@ -1,11 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const models = require('../models');
-const { userValidationRules, validate } = require('../config/validator');
+const { signupValidationRules, loginValidationRules, validate } = require('../config/validator');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const { issueJWT } = require('../lib/utils');
 
+/**
+ * @method - GET
+ * @route - /users/
+ * @description - Test route for authentication
+ */
 router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
     try {
         res.status(200).json(req.user);
@@ -16,6 +21,11 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
     }
 });
 
+/**
+ * @method - GET
+ * @route - /users/auth
+ * @description - Test route for authentication
+ */
 router.get('/auth', passport.authenticate('jwt', { session: false }), (req, res) => {
     res.status(200).json({
         auth: true,
@@ -26,10 +36,10 @@ router.get('/auth', passport.authenticate('jwt', { session: false }), (req, res)
 
 /**
  * @method - POST
- * @param - /signup
- * @description - User SignUp
+ * @route - /users/signup
+ * @description - Handle user signup
  */
-router.post('/signup', userValidationRules(), validate, async (req, res) => {
+router.post('/signup', signupValidationRules(), validate, async (req, res) => {
     try {
         let {
             firstName,
@@ -77,8 +87,8 @@ router.post('/signup', userValidationRules(), validate, async (req, res) => {
 
 /**
  * @method - POST
- * @param - /login
- * @description - User Login
+ * @route - /users/login
+ * @description - Handle user login
  */
 router.post('/login', async (req, res) => {
     try {
@@ -135,6 +145,11 @@ router.post('/login', async (req, res) => {
     }
 });
 
+/**
+ * @method - GET
+ * @route - /users/:userId
+ * @description - Get user data by id
+ */
 router.get('/:userId', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         const userId = req.params.userId;

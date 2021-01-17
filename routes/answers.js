@@ -3,6 +3,11 @@ const router = express.Router();
 const passport = require('passport');
 const models = require('../models');
 
+/**
+ * @method - POST
+ * @route - /answers/add
+ * @description - Add a new answer and update relations
+ */
 router.post('/add', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         let {
@@ -54,6 +59,11 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async (req
     }
 });
 
+/**
+ * @method - POST
+ * @route - /answers/:answerId/score
+ * @description - Update answer
+ */
 router.post('/:answerId/score', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         const answerId = req.params.answerId;

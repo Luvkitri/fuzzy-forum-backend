@@ -2,7 +2,6 @@ const crypto = require('crypto');
 const fs = require('fs');
 
 function genKeyPair() {
-    
     // Generates an object where the keys are stored in properties `privateKey` and `publicKey`
     const keyPair = crypto.generateKeyPairSync('rsa', {
         modulusLength: 4096, // bits - standard for RSA keys
@@ -24,5 +23,4 @@ function genKeyPair() {
 
 }
 
-// Generate the keypair
 genKeyPair();

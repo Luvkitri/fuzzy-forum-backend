@@ -2,11 +2,14 @@ const express = require('express');
 const router = express.Router();
 const models = require('../models');
 const passport = require('passport');
-const entry = require('../models/entry');
 const { firstLetter } = require('../lib/utils');
-const { sequelize } = require('../models');
 const { fuzzyProcess } = require('..//lib/fuzzy');
 
+/**
+ * @method - GET
+ * @route - /entries/
+ * @description - Get all entries
+ */
 router.get('/', async (req, res) => {
     try {
         const results = await models.Entry.findAll({
@@ -38,8 +41,6 @@ router.get('/', async (req, res) => {
             order: [['posted_at', 'DESC']],
         });
 
-
-
         res.status(200).json(results);
     } catch (error) {
         console.log(error);
@@ -49,6 +50,11 @@ router.get('/', async (req, res) => {
     }
 });
 
+/**
+ * @method - GET
+ * @route - /entries/:entryId
+ * @description - Get entry by id
+ */
 router.get('/:entryId', async (req, res) => {
     try {
         const entryId = req.params.entryId;
@@ -115,6 +121,11 @@ router.get('/:entryId', async (req, res) => {
     }
 });
 
+/**
+ * @method - GET
+ * @route - /entries/thread/:threadId
+ * @description - Get all entries that belongs to thread given by id
+ */
 router.get('/thread/:threadId', async (req, res) => {
     try {
         const threadId = req.params.threadId;
@@ -172,6 +183,11 @@ router.get('/thread/:threadId', async (req, res) => {
     }
 });
 
+/**
+ * @method - GET
+ * @route - /entries/subThread/:subThreadId
+ * @description - Get all entries that belongs to subthread given by id
+ */
 router.get('/subthread/:subThreadId', async (req, res) => {
     try {
         const subThreadId = req.params.subThreadId;
@@ -229,6 +245,11 @@ router.get('/subthread/:subThreadId', async (req, res) => {
     }
 });
 
+/**
+ * @method - POST
+ * @route - /entries/score
+ * @description - Update entry score
+ */
 router.post('/:entryId/score', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         const entryId = req.params.entryId;
@@ -341,6 +362,11 @@ router.post('/:entryId/score', passport.authenticate('jwt', { session: false }),
     }
 });
 
+/**
+ * @method - POST
+ * @route - /entries/add
+ * @description - Add an entry update relations and check with fuzzy generator whether to create a new subThread
+ */
 router.post('/add', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         let {

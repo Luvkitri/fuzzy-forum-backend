@@ -1,6 +1,6 @@
 const { body, validationResult } = require('express-validator')
 
-const userValidationRules = () => {
+const signupValidationRules = () => {
     return [
         body('login', 'Please enter a valid login').custom((value) => {
             if (value.lenght > 0 && value.lenght < 3) {
@@ -35,6 +35,6 @@ const validate = (req, res, next) => {
 }
 
 module.exports = {
-    userValidationRules,
+    signupValidationRules,
     validate,
 }

@@ -16,6 +16,14 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
     }
 });
 
+router.get('/auth', passport.authenticate('jwt', { session: false }), (req, res) => {
+    res.status(200).json({
+        auth: true,
+        user: req.user,
+        msg: 'User authorized'
+    });
+});
+
 /**
  * @method - POST
  * @param - /signup
@@ -39,8 +47,6 @@ router.post('/signup', userValidationRules(), validate, async (req, res) => {
                 error: "User Already Exists"
             });
         }
-
-        console.log(req.body);
 
         if (login === "") {
             login = `${firstName} ${lastName}`
@@ -129,12 +135,40 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.get('/auth', passport.authenticate('jwt', { session: false }), (req, res) => {
-    res.status(200).json({
-        auth: true,
-        user: req.user,
-        msg: 'User authorized'
-    });
+router.get('/:userId', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        const results = await models.User.findOne({
+            where: {
+                id: userId
+            },
+            attributes: ['id'],
+            include: [
+                {
+                    model: models.Entry,
+                    as: 'Entries',
+                    attributes: ['id', 'title', 'score', 'answers', 'active'],
+                },
+                {
+                    model: models.Answer,
+                    as: 'Answers',
+                    attributes: ['id', 'entry_id', 'score'],
+                }
+            ]
+        });
+
+        res.status(201).json({
+            success: true,
+            userData: results
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({
+            success: false,
+            error: error.message
+        });
+    }
 });
 
 module.exports = router;

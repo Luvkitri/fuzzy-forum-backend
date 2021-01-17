@@ -18,6 +18,11 @@ module.exports = {
             name: {
                 type: Sequelize.STRING,
                 allowNull: false
+            },
+            is_sub_thread: {
+                type: Sequelize.BOOLEAN,
+                allowNull: false,
+                defaultValue: false
             }
         });
     },

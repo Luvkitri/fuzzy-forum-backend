@@ -47,15 +47,20 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 0
         },
-        views: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            defaultValue: 0
-        },
         answers: {
             type: DataTypes.STRING,
             allowNull: false,
             defaultValue: 0
+        },
+        users_that_incremented: {
+            type: DataTypes.ARRAY(DataTypes.INTEGER),
+            allowNull: true,
+            defaultValue: []
+        },
+        users_that_decremented: {
+            type: DataTypes.ARRAY(DataTypes.INTEGER),
+            allowNull: true,
+            defaultValue: []
         },
         active: {
             type: DataTypes.BOOLEAN,

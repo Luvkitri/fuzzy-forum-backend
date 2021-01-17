@@ -4,14 +4,11 @@ const models = require('../models');
 const passport = require('passport');
 const entry = require('../models/entry');
 const { firstLetter } = require('../lib/utils');
-const { tagsFrequency } = require('../lib/fuzzy');
+const { sequelize } = require('../models');
+const { fuzzyProcess } = require('..//lib/fuzzy');
 
 router.get('/', async (req, res) => {
     try {
-
-        // ! Testing
-        await tagsFrequency();
-
         const results = await models.Entry.findAll({
             include: [
                 {
@@ -151,6 +148,7 @@ router.get('/thread/:threadId', async (req, res) => {
                     attributes: ['first_name', 'last_name']
                 }
             ],
+            order: [['posted_at', 'DESC']],
         });
 
         if (!results) {
@@ -207,6 +205,7 @@ router.get('/subthread/:subThreadId', async (req, res) => {
                     attributes: ['first_name', 'last_name']
                 }
             ],
+            order: [['posted_at', 'DESC']],
         });
 
         if (!results) {
@@ -352,6 +351,7 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async (req
             entryTags
         } = req.body;
 
+        // Create and insert a entry
         const entryData = {
             title: title,
             content: content,
@@ -366,29 +366,44 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async (req
 
         const tags = await models.Tag.findAll();
 
+        // For each tag in db match and match with those passed by user
         let matchingTags = [];
         entryTags.forEach((entryTag, index, entryTagsObject) => {
-            const matchingTag = tags.filter(tag => tag.name === entryTag)[0];
+            const matchingTag = tags.find(tag => tag.name === entryTag);
 
-            if (matchingTag) {
+            // If db tag is matching with given tag pass it to matching tags
+            if (matchingTag !== undefined) {
                 matchingTag.dataValues.name = firstLetter(matchingTag.dataValues.name);
                 matchingTags.push(matchingTag.dataValues);
+
+                // Nullify tags that are matching
                 entryTagsObject[index] = null;
             } else {
+                // Replace a new tag name with same name but first letter uppercase
                 entryTagsObject[index] = { name: firstLetter(entryTag) };
             }
         });
 
+        // Remove tags passed by user that got nullified
         entryTags = entryTags.filter(tag => tag !== null);
 
-        if (matchingTags) {
+        // Check if there are matching tags
+        let nonSubThreadTags = [];
+        if (Array.isArray(matchingTags) && matchingTags.length) {
             const subThreads = await models.SubThread.findAll({ raw: true });
 
+            // Find all existing subthreads that are created for already existing tags
             let existingSubThreads = [];
             matchingTags.forEach(matchingTag => {
-                existingSubThreads.push(subThreads.filter(subThread => subThread.name === matchingTag.name)[0]);
+                const subThread = subThreads.find(subThread => subThread.name === matchingTag.name);
+                if (subThread !== undefined) {
+                    existingSubThreads.push(subThread);
+                } else {
+                    nonSubThreadTags.push(matchingTag);
+                }
             });
 
+            // Update relations of entries with subthreads
             let entrySubThreadRelations = [];
             existingSubThreads.forEach(existingSubThread => {
                 entrySubThreadRelations.push({
@@ -400,13 +415,14 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async (req
             await models.EntrySubThreadRelation.bulkCreate(entrySubThreadRelations);
         }
 
+        // After adding all new tags combine already existing tags with new ones
         let selectedTags = matchingTags;
-        if (entryTags) {
+        if (Array.isArray(entryTags) && entryTags.length) {
             const insertedTags = await models.Tag.bulkCreate(entryTags);
             selectedTags = selectedTags.concat(insertedTags);;
         }
 
-
+        // Update entry tag relations
         let relations = []
         selectedTags.forEach(selectedTag => {
             relations.push({
@@ -420,6 +436,45 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async (req
         res.status(201).json({
             success: true,
         });
+
+        for (const tag of nonSubThreadTags) {
+            const createSubThread = await fuzzyProcess(tag.name);
+
+            if (createSubThread) {
+                const subThreadData = {
+                    name: tag.name,
+                    thread_id: thread_id
+                }
+
+                // Insert new subthread
+                const newSubThread = await models.SubThread.create(subThreadData);
+
+                // Find all entries with that tag
+                const entries = await models.Entry.findAll({
+                    include: {
+                        model: models.Tag,
+                        as: 'TagsInEntries',
+                        where: {
+                            name: tag.name
+                        }
+                    }
+                });
+
+                // Create relations
+                let entrySubThreadRelations = [];
+
+                entries.forEach(entry => {
+                    entrySubThreadRelations.push({
+                        entry_id: entry.id,
+                        sub_thread_id: newSubThread.id
+                    })
+                });
+
+                await models.EntrySubThreadRelation.bulkCreate(entrySubThreadRelations);
+            }
+        }
+
+        return;
     } catch (error) {
         console.log(error);
         res.status(500).send({

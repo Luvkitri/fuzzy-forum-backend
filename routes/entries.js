@@ -230,6 +230,118 @@ router.get('/subthread/:subThreadId', async (req, res) => {
     }
 });
 
+router.post('/:entryId/score', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+        const entryId = req.params.entryId;
+        const userId = req.user.id;
+        const operation = req.body.score;
+
+        const entry = await models.Entry.findOne({
+            raw: true,
+            where: {
+                id: entryId
+            }
+        });
+
+        // Check if entry exists
+        if (!entry) {
+            return res.status(404).send({
+                success: false,
+                error: "Entry does not exists."
+            });
+        }
+
+        // Check if user owns this entry
+        if (entry.user_id === userId) {
+            return res.status(400).send({
+                success: false,
+                error: "You can't rate your entry."
+            });
+        }
+
+        // Construct update object
+        let updateObj = {};
+
+        switch (operation) {
+            case 'increment':
+                // Check if user already incremented
+                if (entry.users_that_incremented.includes(userId)) {
+                    return res.status(400).send({
+                        success: false,
+                        error: "User already rated this entry."
+                    });
+                }
+
+                updateObj.score = models.sequelize.literal('score + 1');
+
+                // Check if user had decremented before
+                if (entry.users_that_decremented.includes(userId)) {
+                    updateObj.users_that_decremented = models.sequelize.fn(
+                        'array_remove',
+                        models.sequelize.col('users_that_decremented'),
+                        req.user.id
+                    );
+                } else {
+                    updateObj.users_that_incremented = models.sequelize.fn(
+                        'array_append',
+                        models.sequelize.col('users_that_incremented'),
+                        req.user.id
+                    );
+                }
+                break;
+            case 'decrement':
+                // Check if user already decremented
+                if (entry.users_that_decremented.includes(userId)) {
+                    return res.status(400).send({
+                        success: false,
+                        error: "User already rated this entry."
+                    });
+                }
+
+                updateObj.score = models.sequelize.literal('score - 1');
+
+                // Check if user had incremented before
+                if (entry.users_that_incremented.includes(userId)) {
+                    updateObj.users_that_incremented = models.sequelize.fn(
+                        'array_remove',
+                        models.sequelize.col('users_that_incremented'),
+                        req.user.id
+                    );
+                } else {
+                    updateObj.users_that_decremented = models.sequelize.fn(
+                        'array_append',
+                        models.sequelize.col('users_that_decremented'),
+                        req.user.id
+                    );
+                }
+                break;
+            default:
+                return res.status(400).send({
+                    success: false,
+                    error: "Unknow operation, try 'increment' or 'decrement'."
+                });
+        }
+
+        await models.Entry.update(
+            updateObj, {
+            where: {
+                id: entryId
+            }
+        }
+        );
+
+        return res.status(200).json({
+            success: true
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
 router.post('/add', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         let {

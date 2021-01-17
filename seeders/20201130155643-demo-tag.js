@@ -4,25 +4,29 @@ module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.bulkInsert('tag', [
             {
-                name: "python"
+                name: "Python",
+                is_sub_thread: true
             },
             {
-                name: "algorithm"
+                name: "Algorithm",
+                is_sub_thread: true
             },
             {
-                name: "review"
+                name: "Review",
+                is_sub_thread: true
+            },
+            {
+                name: "Java",
+                is_sub_thread: false
+            },
+            {
+                name: "C++",
+                is_sub_thread: false
             }
         ]);
     },
 
     down: async (queryInterface, Sequelize) => {
-        /**
-         * Add commands to revert seed here.
-         *
-         * Example:
-         * await queryInterface.bulkDelete('People', null, {});
-         */
-
         await queryInterface.bulkDelete('tag', null, {
             truncate: true,
             cascade: true,

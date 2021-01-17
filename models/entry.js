@@ -3,14 +3,14 @@ const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
     class Entry extends Model {
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
         static associate(models) {
             Entry.belongsTo(models.User);
             Entry.belongsTo(models.Thread);
+
+            Entry.hasMany(models.Answer, {
+                foreignKey: 'entry_id',
+                onDelete: 'CASCADE'
+            });
 
             Entry.belongsToMany(models.Tag, { 
                 as: 'TagsInEntries',
@@ -30,19 +30,14 @@ module.exports = (sequelize, DataTypes) => {
 
     Entry.init({
         title: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false
         },
         content: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false
         },
         score: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            defaultValue: 0
-        },
-        views: {
             type: DataTypes.STRING,
             allowNull: false,
             defaultValue: 0
@@ -51,6 +46,16 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
             defaultValue: 0
+        },
+        users_that_incremented: {
+            type: DataTypes.ARRAY(DataTypes.INTEGER),
+            allowNull: true,
+            defaultValue: []
+        },
+        users_that_decremented: {
+            type: DataTypes.ARRAY(DataTypes.INTEGER),
+            allowNull: true,
+            defaultValue: []
         },
         active: {
             type: DataTypes.BOOLEAN,

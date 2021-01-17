@@ -4,7 +4,8 @@
   "description": "The forum application with automatic fuzzy generator of new topics",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "rebuild-db": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all"
   },
   "repository": {
     "type": "git",
@@ -20,12 +21,17 @@
     "bcryptjs": "^2.4.3",
     "connect-flash": "^0.1.1",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
+    "es6-fuzz": "^3.0.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "express-validator": "^6.7.0",
+    "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",
+    "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "pg": "^8.4.1",
     "pg-hstore": "^2.3.3",

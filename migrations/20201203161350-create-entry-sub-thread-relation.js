@@ -35,12 +35,6 @@ module.exports = {
     },
 
     down: async (queryInterface, Sequelize) => {
-        /**
-         * Add reverting commands here.
-         *
-         * Example:
-         * await queryInterface.dropTable('users');
-         */
         await queryInterface.dropTable('entry_sub_thread_relation');
     }
 };

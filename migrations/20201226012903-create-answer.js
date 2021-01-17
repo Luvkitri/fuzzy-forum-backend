@@ -2,26 +2,18 @@
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('entry', {
+        await queryInterface.createTable('answer', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            title: {
+            content: {
                 type: Sequelize.TEXT,
                 allowNull: false
             },
-            content: {
-                type: Sequelize.TEXT,
-            },
             score: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                defaultValue: 0
-            },
-            answers: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 defaultValue: 0
@@ -44,11 +36,6 @@ module.exports = {
                 type: Sequelize.DATE,
                 allowNull: false
             },
-            active: {
-                type: Sequelize.BOOLEAN,
-                allowNull: false,
-                defaultValue: true
-            },
             user_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
@@ -57,11 +44,11 @@ module.exports = {
                     key: 'id'
                 }
             },
-            thread_id: {
+            entry_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'thread',
+                    model: 'entry',
                     key: 'id'
                 }
             }
@@ -69,6 +56,6 @@ module.exports = {
     },
 
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('entry');
+        await queryInterface.dropTable('answer');
     }
 };

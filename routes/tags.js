@@ -2,6 +2,11 @@ const express = require('express');
 const router = express.Router();
 const models = require('../models');
 
+/**
+ * @method - GET
+ * @route - /tags/
+ * @description - Get all tags
+ */
 router.get('/', async (req, res) => {
     try {
         const results = await models.Tags.findAll();
@@ -14,6 +19,11 @@ router.get('/', async (req, res) => {
     }
 });
 
+/**
+ * @method - GET
+ * @route - /tags/relative
+ * @description - Get all tags with entries that belong to those tags
+ */
 router.get('/relative', async (req, res) => {
     try {
         const results = await models.Tags.findAll({

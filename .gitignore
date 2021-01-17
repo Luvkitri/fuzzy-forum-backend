@@ -104,3 +104,6 @@ dist
 .tern-port
 
 connect_to_db.bat
+
+id_rsa_priv.pem
+.vscode

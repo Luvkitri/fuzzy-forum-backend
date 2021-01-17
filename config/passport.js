@@ -41,6 +41,7 @@ module.exports = (passport) => {
 
                 return done(null, user.dataValues);
             } catch (error) {
+                console.log(error.message);
                 done(error, null);
             }
         })

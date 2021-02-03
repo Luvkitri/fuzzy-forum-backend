@@ -4,11 +4,11 @@ const morgan = require('morgan');
 const cors = require('cors');
 const passport = require('passport');
 
-// Passport config
-require('./config/passport')(passport);
-
 // Load env variables
 dotenv.config({ path: './config/.env' });
+
+// Passport config
+require('./config/passport')(passport);
 
 let app = express();
 

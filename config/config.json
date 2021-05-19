@@ -19,6 +19,7 @@
     "dialectOptions": {
       "ssl": true,
       "rejectUnauthorized": false
-    }
+    },
+    "dbRDS": false
   }
 }

@@ -44,6 +44,7 @@ router.get('/', async (req, res) => {
         res.status(200).json(results);
     } catch (error) {
         console.log(error);
+        console.log(`Code: ${error.code}`);
         res.status(500).send({
             error: error.message,
             code: error.code,
